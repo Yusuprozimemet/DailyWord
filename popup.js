@@ -1,25 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
   loadWords();
 
-document.getElementById("next").addEventListener("click", () => {
-  incrementWordIndex();
-});
+  // Language Selector and Pronounce Icon
+  const languageSelector = document.getElementById('languageSelector');
+  const pronounceIcon = document.getElementById('pronounce-icon');
+  pronounceIcon.addEventListener("click", () => {
+    pronounceWord(languageSelector.value);
+  });
 
-document.getElementById("previous").addEventListener("click", () => {
-  decrementWordIndex();
-});
+  // Other event listeners
+  document.getElementById("next").addEventListener("click", () => {
+    incrementWordIndex();
+  });
 
-document.getElementById("remove").addEventListener("click", () => {
-  removeCurrentWord();
-});
+  document.getElementById("previous").addEventListener("click", () => {
+    decrementWordIndex();
+  });
 
- // Enable editing on double-click
- document.getElementById("word").addEventListener("dblclick", enableEditing);
- document.getElementById("sentence").addEventListener("dblclick", enableEditing);
+  document.getElementById("remove").addEventListener("click", () => {
+    removeCurrentWord();
+  });
 
- // Save changes on blur (click outside)
- document.getElementById("word").addEventListener("blur", saveChanges);
- document.getElementById("sentence").addEventListener("blur", saveChanges);
+  // Enable editing on double-click
+  document.getElementById("word").addEventListener("dblclick", enableEditing);
+  document.getElementById("sentence").addEventListener("dblclick", enableEditing);
+
+  // Save changes on blur (click outside)
+  document.getElementById("word").addEventListener("blur", saveChanges);
+  document.getElementById("sentence").addEventListener("blur", saveChanges);
 });
 
 document.getElementById("download").addEventListener("click", () => {
@@ -32,6 +40,20 @@ document.getElementById("download").addEventListener("click", () => {
     link.click();
   });
 });
+
+// New function: pronounceWord
+function pronounceWord(language) {
+  const word = document.getElementById("word").textContent;
+  // Web Speech API - SpeechSynthesisUtterance
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = language;
+  utterance.rate = 1; // Speed of the speech
+  utterance.pitch = 1; // Pitch of the speech
+  utterance.volume = 1; // Volume of the speech
+
+  // Speak the word
+  window.speechSynthesis.speak(utterance);
+}
 
 function enableEditing(event) {
   const target = event.target;

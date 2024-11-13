@@ -27,6 +27,18 @@ body {
   transform: scale(1.02);
 }
 
+/* Add this to your CSS to keep the pronounce icon next to the word */
+#wordContainer > h2, 
+#wordContainer > i#pronounce-icon {
+  display: inline-block; /* Allow them to be on the same line */
+  vertical-align: middle; /* Align them vertically */
+}
+
+#wordContainer > i#pronounce-icon {
+  margin-left: 8px; /* Add some space between the word and the icon */
+  font-size: 1.2em; /* Optionally, adjust the icon size to better match the word */
+}
+
 /* Word styling */
 #word {
   font-size: 1.6em;
@@ -124,4 +136,10 @@ button:focus {
 .editing {
   border: 1px solid #007bff;
   background-color: #f0f0f0;
+}
+
+#languageSelector {
+  margin-left: 8px;
+  font-size: 1em;
+  vertical-align: middle;
 }

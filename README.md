@@ -12,17 +12,20 @@ In the second screenshot, you can see the option to edit either the word, senten
 
 ![Edit Word](2.png)
 
+### 3. Pronunciation Feature
+In the third screenshot, you can see the new pronunciation feature. By clicking the "Pronounce" button, you can listen to the pronunciation of the word to help improve your speaking and listening skills.
+
+![Pronunciation Feature](3.png)
+
 ## How to Use:
 1. **Install the Extension**: Download and install the extension in your browser.
 2. **View Daily Word**: Upon activation, the extension will show you a new word along with an example sentence.
 3. **Save, Edit, or Download**: Use the buttons to save the word, edit it, or download it for offline use.
-4. **Receive Daily Reminders**: You will receive two notifications a day to remind you to review new words.
-
+4. **Pronounce the Word**: Click the "Pronounce" button to hear the correct pronunciation of the word.
+5. **Receive Daily Reminders**: You will receive two notifications a day to remind you to review new words.
 
 ## Installation Instructions:
 1. Download or clone this repository.
 2. Navigate to your browser's Extensions page.
 3. Enable "Developer Mode" and click "Load Unpacked".
 4. Select the directory where the extension files are located.
-
-
