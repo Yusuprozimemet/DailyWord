@@ -1,9 +1,40 @@
+
+let typingMode = false;
+let streakCount = 0;
+const CORRECT_STREAK_THRESHOLD = 3; // Number of correct words needed for a "streak"
+
 document.addEventListener("DOMContentLoaded", () => {
   loadWords();
 
   // Language Selector and Pronounce Icon
   const languageSelector = document.getElementById('languageSelector');
   const pronounceIcon = document.getElementById('pronounce-icon');
+
+  // Add new button for typing practice mode
+  const typingButton = document.createElement('button');
+  typingButton.id = 'toggleTyping';
+  typingButton.innerHTML = '<i class="fas fa-keyboard"></i>';
+  typingButton.title = 'Toggle Typing Practice';
+  document.getElementById('navigation').appendChild(typingButton);
+
+  // Add stats display
+  const statsDiv = document.createElement('div');
+  statsDiv.id = 'stats';
+  statsDiv.className = 'stats-container';
+  statsDiv.innerHTML = `
+    <div class="stat-item">
+      <i class="fas fa-fire"></i>
+      <span id="streak">Streak: 0</span>
+    </div>
+    <div class="stat-item">
+      <i class="fas fa-check"></i>
+      <span id="accuracy">Accuracy: 0%</span>
+    </div>
+  `;
+  document.getElementById('wordContainer').insertBefore(statsDiv, document.getElementById('navigation'));
+
+
+
   pronounceIcon.addEventListener("click", () => {
     pronounceWord(languageSelector.value);
   });
@@ -28,6 +59,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Save changes on blur (click outside)
   document.getElementById("word").addEventListener("blur", saveChanges);
   document.getElementById("sentence").addEventListener("blur", saveChanges);
+
+    // Add typing practice container
+    const typingContainer = document.createElement('div');
+    typingContainer.id = 'typingContainer';
+    typingContainer.className = 'typing-container hidden';
+    typingContainer.innerHTML = `
+      <input type="text" id="typingInput" placeholder="Type the word here..." autocomplete="off">
+      <div id="feedback"></div>
+    `;
+    document.getElementById('wordContainer').insertBefore(typingContainer, document.getElementById('navigation'));
+  
+    // Add event listeners for new features
+    document.getElementById('toggleTyping').addEventListener('click', toggleTypingMode);
+    document.getElementById('typingInput').addEventListener('input', checkTyping);
+    document.addEventListener('keydown', handleKeyPress);
 });
 
 document.getElementById("download").addEventListener("click", () => {
@@ -101,8 +147,103 @@ function loadWords() {
   });
 }
 
+// Typing practice functions
+function toggleTypingMode() {
+  typingMode = !typingMode;
+  const typingContainer = document.getElementById('typingContainer');
+  const typingButton = document.getElementById('toggleTyping');
+  
+  if (typingMode) {
+    typingContainer.classList.remove('hidden');
+    typingButton.classList.add('active');
+    document.getElementById('typingInput').focus();
+    document.getElementById('word').classList.add('highlight');
+  } else {
+    typingContainer.classList.add('hidden');
+    typingButton.classList.remove('active');
+    document.getElementById('word').classList.remove('highlight');
+  }
+}
 
-// Update the `updateWordDisplay` function to reflect the new editable elements
+function checkTyping(event) {
+  const input = event.target;
+  const currentWord = document.getElementById('word').textContent;
+  const feedback = document.getElementById('feedback');
+  
+  if (input.value === currentWord) {
+    handleCorrectWord(input);
+  } else if (currentWord.startsWith(input.value)) {
+    feedback.textContent = "Keep going...";
+    feedback.className = 'neutral';
+    input.className = '';
+  } else {
+    feedback.textContent = "Try again!";
+    feedback.className = 'incorrect';
+    input.className = 'incorrect';
+  }
+}
+
+function handleCorrectWord(input) {
+  streakCount++;
+  updateStats();
+  
+  const feedback = document.getElementById('feedback');
+  feedback.textContent = "Correct!";
+  feedback.className = 'correct';
+  input.className = 'correct';
+  
+  // Clear input and move to next word after a brief delay
+  setTimeout(() => {
+    input.value = '';
+    input.className = '';
+    feedback.textContent = '';
+    incrementWordIndex();
+    
+    if (streakCount % CORRECT_STREAK_THRESHOLD === 0) {
+      showStreakAnimation();
+    }
+  }, 1000);
+}
+
+function updateStats() {
+  const streakElement = document.getElementById('streak');
+  streakElement.textContent = `Streak: ${streakCount}`;
+  
+  // Calculate and update accuracy
+  chrome.storage.local.get(['totalAttempts', 'correctAttempts'], (data) => {
+    const totalAttempts = (data.totalAttempts || 0) + 1;
+    const correctAttempts = (data.correctAttempts || 0) + 1;
+    const accuracy = Math.round((correctAttempts / totalAttempts) * 100);
+    
+    document.getElementById('accuracy').textContent = `Accuracy: ${accuracy}%`;
+    chrome.storage.local.set({ totalAttempts, correctAttempts });
+  });
+}
+
+function showStreakAnimation() {
+  const streakOverlay = document.createElement('div');
+  streakOverlay.className = 'streak-overlay';
+  streakOverlay.textContent = `${streakCount} Words Streak!`;
+  document.body.appendChild(streakOverlay);
+  
+  setTimeout(() => {
+    streakOverlay.remove();
+  }, 2000);
+}
+
+function handleKeyPress(event) {
+  if (!typingMode) return;
+  
+  if (event.key === 'Enter') {
+    const input = document.getElementById('typingInput');
+    if (input.value === document.getElementById('word').textContent) {
+      handleCorrectWord(input);
+    }
+  }
+}
+
+
+// Modify your existing updateWordDisplay function to include these additional features:
 function updateWordDisplay() {
   chrome.storage.local.get(["words", "currentIndex"], (data) => {
     const words = data.words || [];
@@ -116,10 +257,39 @@ function updateWordDisplay() {
     }
 
     const word = words[currentIndex];
-    document.getElementById("word").textContent = word? word.word : "No word available";
-    document.getElementById("sentence").textContent = word? word.sentence : "";
-    document.getElementById("message").textContent = ""; // Clear message when displaying a word
+    document.getElementById("word").textContent = word ? word.word : "No word available";
+    document.getElementById("sentence").textContent = word ? word.sentence : "";
+    document.getElementById("message").textContent = "";
+
+    // Reset typing input if in typing mode
+    if (typingMode) {
+      const typingInput = document.getElementById('typingInput');
+      typingInput.value = '';
+      typingInput.className = '';
+      document.getElementById('feedback').textContent = '';
+      typingInput.focus();
+    }
+
+    // Add word progress indicator
+    updateProgressIndicator(currentIndex, words.length);
   });
+}
+
+function updateProgressIndicator(currentIndex, totalWords) {
+  const progress = document.createElement('div');
+  progress.id = 'wordProgress';
+  progress.className = 'word-progress';
+  progress.textContent = `${currentIndex + 1}/${totalWords}`;
+  
+  const existingProgress = document.getElementById('wordProgress');
+  if (existingProgress) {
+    existingProgress.remove();
+  }
+  
+  document.getElementById('wordContainer').insertBefore(
+    progress,
+    document.getElementById('navigation')
+  );
 }
 
 function incrementWordIndex() {
