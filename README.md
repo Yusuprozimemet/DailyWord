@@ -17,12 +17,18 @@ In the third screenshot, you can see the new pronunciation feature. By clicking 
 
 ![Pronunciation Feature](3.png)
 
+### 4. Typing Practice (New updates)
+In the fourth screenshot, you can see the typing practice feature. This interactive tool helps you reinforce your learning by typing the words you're studying. The interface provides immediate feedback on your accuracy and helps build muscle memory for new vocabulary.
+
+![Typing Practice](4.png)
+
 ## How to Use:
 1. **Install the Extension**: Download and install the extension in your browser.
 2. **View Daily Word**: Upon activation, the extension will show you a new word along with an example sentence.
 3. **Save, Edit, or Download**: Use the buttons to save the word, edit it, or download it for offline use.
 4. **Pronounce the Word**: Click the "Pronounce" button to hear the correct pronunciation of the word.
-5. **Receive Daily Reminders**: You will receive two notifications a day to remind you to review new words.
+5. **Practice Typing**: Use the typing feature to practice spelling the words correctly. You'll receive immediate feedback on your input.
+6. **Receive Daily Reminders**: You will receive two notifications a day to remind you to review new words.
 
 ## Installation Instructions:
 1. Download or clone this repository.
