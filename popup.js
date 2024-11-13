@@ -1,3 +1,6 @@
+document.addEventListener("DOMContentLoaded", () => {
+  loadWords();
+
 document.getElementById("next").addEventListener("click", () => {
   incrementWordIndex();
 });
@@ -10,6 +13,15 @@ document.getElementById("remove").addEventListener("click", () => {
   removeCurrentWord();
 });
 
+ // Enable editing on double-click
+ document.getElementById("word").addEventListener("dblclick", enableEditing);
+ document.getElementById("sentence").addEventListener("dblclick", enableEditing);
+
+ // Save changes on blur (click outside)
+ document.getElementById("word").addEventListener("blur", saveChanges);
+ document.getElementById("sentence").addEventListener("blur", saveChanges);
+});
+
 document.getElementById("download").addEventListener("click", () => {
   chrome.storage.local.get("words", (data) => {
     const words = data.words || [];
@@ -20,6 +32,36 @@ document.getElementById("download").addEventListener("click", () => {
     link.click();
   });
 });
+
+function enableEditing(event) {
+  const target = event.target;
+  target.contentEditable = "true";
+  target.classList.add("editing"); // Visual feedback for editing state
+  target.focus();
+}
+
+function saveChanges(event) {
+  const target = event.target;
+  target.contentEditable = "false";
+  target.classList.remove("editing"); // Remove visual feedback
+
+  // Save the updated text to storage
+  if (target.id === "word") {
+    chrome.storage.local.get(["words", "currentIndex"], (data) => {
+      const words = data.words || [];
+      const currentIndex = data.currentIndex || 0;
+      words[currentIndex].word = target.innerText;
+      chrome.storage.local.set({ words });
+    });
+  } else if (target.id === "sentence") {
+    chrome.storage.local.get(["words", "currentIndex"], (data) => {
+      const words = data.words || [];
+      const currentIndex = data.currentIndex || 0;
+      words[currentIndex].sentence = target.innerText;
+      chrome.storage.local.set({ words });
+    });
+  }
+}
 
 function loadWords() {
   chrome.storage.local.get("words", (data) => {
@@ -37,6 +79,8 @@ function loadWords() {
   });
 }
 
+
+// Update the `updateWordDisplay` function to reflect the new editable elements
 function updateWordDisplay() {
   chrome.storage.local.get(["words", "currentIndex"], (data) => {
     const words = data.words || [];
@@ -50,8 +94,8 @@ function updateWordDisplay() {
     }
 
     const word = words[currentIndex];
-    document.getElementById("word").textContent = word ? word.word : "No word available";
-    document.getElementById("sentence").textContent = word ? word.sentence : "";
+    document.getElementById("word").textContent = word? word.word : "No word available";
+    document.getElementById("sentence").textContent = word? word.sentence : "";
     document.getElementById("message").textContent = ""; // Clear message when displaying a word
   });
 }
