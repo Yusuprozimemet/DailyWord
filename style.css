@@ -1,0 +1,122 @@
+/* Basic styling for the popup */
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 0;
+  width: 320px;
+  height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333333;
+}
+
+/* Container styling */
+#wordContainer {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  padding: 25px;
+  text-align: center;
+  width: 90%;
+  transition: transform 0.3s ease;
+}
+
+#wordContainer:hover {
+  transform: scale(1.02);
+}
+
+/* Word styling */
+#word {
+  font-size: 1.6em;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* Sentence styling */
+#sentence {
+  font-size: 1em;
+  color: #606060;
+  margin-bottom: 20px;
+  font-style: italic;
+  line-height: 1.4em;
+}
+
+/* Navigation container */
+#navigation {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+/* Button styling */
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  background-color: #2471a3;
+  transform: scale(0.95);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 4px #3498db;
+}
+
+/* Styling for Remove Button */
+#remove {
+  background-color: #e74c3c;
+  font-weight: bold;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#remove:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+#remove:active {
+  background-color: #a0382b;
+  transform: scale(0.95);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#remove:focus {
+  outline: none;
+  box-shadow: 0 0 4px #e74c3c, 0 0 8px rgba(231, 76, 60, 0.5);
+}
+
+/* Styling for message section */
+#message {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #e67e22;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
